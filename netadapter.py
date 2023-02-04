@@ -36,6 +36,14 @@ class NetAdapter:
         print(process.stderr)
         return []
 
+    @staticmethod
+    def get_adapter_status(adpter_name: str):
+        cmd: list[str] = ["powershell.exe", f'(Get-NetAdapter | Where-Object {{$_.Name -eq "{adpter_name}"}}).Status']
+        output: str = subprocess.check_output(cmd, text=True, timeout=10)
+        if not output:
+            raise AttributeError(f"The Adapter {adpter_name} has no status attribute, ensure that the adapter exists")
+        return output.strip()
+
 
 if __name__ == "__main__":
     # if disable_netadapter("Ethernet"):
@@ -50,3 +58,5 @@ if __name__ == "__main__":
     #     print("Adapter not enabled")
     adapters = NetAdapter.get_netadapters()
     print(adapters)
+
+    print(NetAdapter.get_adapter_status("Ethernet"))
