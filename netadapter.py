@@ -31,7 +31,7 @@ class WinNetAdapter:
         process: subprocess.CompletedProcess = subprocess.run(cmd, capture_output=True, text=True, timeout=10)
         if bool(process.returncode == 0):
             print(process.stdout)
-            adapters = process.stdout.split("\n")
+            adapters = process.stdout.casefold().split("\n")
             adapters.pop()
             return adapters
         print(process.stdout)
@@ -44,7 +44,7 @@ class WinNetAdapter:
         output: str = subprocess.check_output(cmd, text=True, timeout=10)
         if not output:
             raise AttributeError(f"The Adapter {adpter_name} has no status attribute, ensure that the adapter exists")
-        return output.strip()
+        return output.casefold().strip()
 
 
 @contextmanager
