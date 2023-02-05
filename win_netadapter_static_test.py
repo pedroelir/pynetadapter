@@ -2,7 +2,7 @@ import os
 import ctypes
 
 import pytest
-from winnetadapter import WinNetAdapter, disable_all_adapters
+from winnetadapter import WinNetAdapter, ctx_disable_all_adapters
 
 
 adapter_name = "Ethernet"
@@ -46,7 +46,7 @@ def test_bad_adapter_status():
 @pytest.mark.xfail(not is_admin, reason="Will fail if not Admin", raises=ResourceWarning, strict=True)
 def test_ctx_diable_all():
     adapters = WinNetAdapter.get_netadapters()
-    with disable_all_adapters():
+    with ctx_disable_all_adapters():
         adapters_status: dict[str, str] = {
             adapter: WinNetAdapter.get_adapter_status(adpter_name=adapter).casefold() for adapter in adapters
         }
@@ -64,7 +64,7 @@ def test_ctx_diable_all():
 def test_ctx_diable_all_with_exception():
     adapters = WinNetAdapter.get_netadapters()
     try:
-        with disable_all_adapters():
+        with ctx_disable_all_adapters():
             raise RuntimeError
     except RuntimeError:
         adapters_status: dict[str, str] = {
