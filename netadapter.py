@@ -1,6 +1,8 @@
 import subprocess
 import time
 
+from contextlib import contextmanager
+
 
 class NetAdapter:
     @staticmethod
@@ -45,6 +47,21 @@ class NetAdapter:
         return output.strip()
 
 
+@contextmanager
+def disable_all_adapters():
+    try:
+        if not (NetAdapter.disable_netadapter("*")):
+            raise ResourceWarning("Could not disable Adapters try runing as Admin")
+        yield
+    finally:
+        NetAdapter.enable_netadapter("*")
+        time.sleep(10)
+        adapters = NetAdapter.get_netadapters()
+        adapters_status = [NetAdapter.get_adapter_status(adpter_name=adapter).casefold() for adapter in adapters]
+        if "disabled" in adapters_status:
+            raise ResourceWarning("Not all adapters were enabled")
+
+
 if __name__ == "__main__":
     # if disable_netadapter("Ethernet"):
     #     print("Adapter disabled")
@@ -60,3 +77,7 @@ if __name__ == "__main__":
     print(adapters)
 
     print(NetAdapter.get_adapter_status("Ethernet"))
+
+    with disable_all_adapters():
+        print([NetAdapter.get_adapter_status(adpter_name=adapter).casefold() for adapter in adapters])
+    print([NetAdapter.get_adapter_status(adpter_name=adapter).casefold() for adapter in adapters])
