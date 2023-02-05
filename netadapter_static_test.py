@@ -14,7 +14,7 @@ except AttributeError:
 
 def test_get_adapters():
     adpaters = WinNetAdapter.get_netadapters()
-    assert adapter_name in adpaters
+    assert adapter_name.casefold() in adpaters
 
 
 @pytest.mark.xfail(not is_admin, reason="Will fail if not Admin")
