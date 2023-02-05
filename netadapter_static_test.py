@@ -2,7 +2,7 @@ import os
 import ctypes
 
 import pytest
-from netadapter import WinNetAdapter, disable_all_adapters
+from winnetadapter import WinNetAdapter, disable_all_adapters
 
 
 adapter_name = "Ethernet"
