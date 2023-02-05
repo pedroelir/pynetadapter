@@ -65,7 +65,7 @@ def test_enable_all():
 
 
 @pytest.mark.xfail(not is_admin, reason="Will fail if not Admin", raises=ResourceWarning, strict=True)
-def test_ctx_diable_all():
+def test_ctx_disable_all():
     adapters = WinNetAdapter.get_netadapters()
     with ctx_disable_all_adapters():
         adapters_status: dict[str, str] = {
@@ -82,7 +82,7 @@ def test_ctx_diable_all():
 
 
 @pytest.mark.xfail(not is_admin, reason="Will fail if not Admin", raises=ResourceWarning, strict=True)
-def test_ctx_diable_all_with_exception():
+def test_ctx_disable_all_with_exception():
     adapters = WinNetAdapter.get_netadapters()
     try:
         with ctx_disable_all_adapters():

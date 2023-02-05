@@ -70,15 +70,11 @@ class WinNetAdapter:
 @contextmanager
 def ctx_disable_all_adapters():
     try:
-        if not (WinNetAdapter.disable_netadapter("*")):
+        if not (WinNetAdapter.disable_all_adapters()):
             raise ResourceWarning("Could not disable Adapters try runing as Admin")
         yield
     finally:
-        WinNetAdapter.enable_netadapter("*")
-        time.sleep(10)
-        adapters = WinNetAdapter.get_netadapters()
-        adapters_status = [WinNetAdapter.get_adapter_status(adpter_name=adapter).casefold() for adapter in adapters]
-        if "disabled" in adapters_status:
+        if not (WinNetAdapter.enable_all_adapters()):
             raise ResourceWarning("Not all adapters were enabled")
 
 
