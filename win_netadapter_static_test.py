@@ -43,6 +43,27 @@ def test_bad_adapter_status():
         WinNetAdapter.get_adapter_status(adpter_name=adapter_name[:-2])
 
 
+@pytest.mark.xfail(not is_admin, reason="Will fail if not Admin", strict=True)
+def test_disable_all():
+    assert WinNetAdapter.disable_all_adapters()
+    adapters = WinNetAdapter.get_netadapters()
+    adapters_status: dict[str, str] = {
+        adapter: WinNetAdapter.get_adapter_status(adpter_name=adapter).casefold() for adapter in adapters
+    }
+    for adapter, adapter_status in adapters_status.items():
+        assert adapter_status == "disabled"
+
+
+def test_enable_all():
+    assert WinNetAdapter.enable_all_adapters()
+    adapters = WinNetAdapter.get_netadapters()
+    adapters_status: dict[str, str] = {
+        adapter: WinNetAdapter.get_adapter_status(adpter_name=adapter).casefold() for adapter in adapters
+    }
+    for adapter, adapter_status in adapters_status.items():
+        assert adapter_status != "disabled"
+
+
 @pytest.mark.xfail(not is_admin, reason="Will fail if not Admin", raises=ResourceWarning, strict=True)
 def test_ctx_diable_all():
     adapters = WinNetAdapter.get_netadapters()

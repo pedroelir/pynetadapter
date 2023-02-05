@@ -46,6 +46,26 @@ class WinNetAdapter:
             raise AttributeError(f"The Adapter {adpter_name} has no status attribute, ensure that the adapter exists")
         return output.casefold().strip()
 
+    @staticmethod
+    def disable_all_adapters():
+        if not WinNetAdapter.disable_netadapter("*"):
+            return False
+        adapters = WinNetAdapter.get_netadapters()
+        for adapter in adapters:
+            if WinNetAdapter.get_adapter_status(adpter_name=adapter) != "disabled":
+                return False
+        return True
+
+    @staticmethod
+    def enable_all_adapters():
+        if not WinNetAdapter.enable_netadapter("*"):
+            return False
+        adapters = WinNetAdapter.get_netadapters()
+        for adapter in adapters:
+            if WinNetAdapter.get_adapter_status(adpter_name=adapter) == "disabled":
+                return False
+        return True
+
 
 @contextmanager
 def ctx_disable_all_adapters():
@@ -78,6 +98,8 @@ if __name__ == "__main__":
 
     print(WinNetAdapter.get_adapter_status("Ethernet"))
 
-    with ctx_disable_all_adapters():
-        print([WinNetAdapter.get_adapter_status(adpter_name=adapter).casefold() for adapter in adapters])
-    print([WinNetAdapter.get_adapter_status(adpter_name=adapter).casefold() for adapter in adapters])
+    # with ctx_disable_all_adapters():
+    #     print([WinNetAdapter.get_adapter_status(adpter_name=adapter).casefold() for adapter in adapters])
+    # print([WinNetAdapter.get_adapter_status(adpter_name=adapter).casefold() for adapter in adapters])
+    print(f"Disable all: {WinNetAdapter.disable_all_adapters()}")
+    print(f"Enable all: {WinNetAdapter.enable_all_adapters()}")
