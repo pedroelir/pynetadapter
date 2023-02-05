@@ -4,7 +4,7 @@ import time
 from contextlib import contextmanager
 
 
-class NetAdapter:
+class WinNetAdapter:
     @staticmethod
     def enable_netadapter(adapter_name: str) -> bool:
         cmd: list[str] = ["powershell.exe", f"Enable-NetAdapter -Name {adapter_name} ; exit -not ($?)"]
@@ -50,14 +50,14 @@ class NetAdapter:
 @contextmanager
 def disable_all_adapters():
     try:
-        if not (NetAdapter.disable_netadapter("*")):
+        if not (WinNetAdapter.disable_netadapter("*")):
             raise ResourceWarning("Could not disable Adapters try runing as Admin")
         yield
     finally:
-        NetAdapter.enable_netadapter("*")
+        WinNetAdapter.enable_netadapter("*")
         time.sleep(10)
-        adapters = NetAdapter.get_netadapters()
-        adapters_status = [NetAdapter.get_adapter_status(adpter_name=adapter).casefold() for adapter in adapters]
+        adapters = WinNetAdapter.get_netadapters()
+        adapters_status = [WinNetAdapter.get_adapter_status(adpter_name=adapter).casefold() for adapter in adapters]
         if "disabled" in adapters_status:
             raise ResourceWarning("Not all adapters were enabled")
 
@@ -73,11 +73,11 @@ if __name__ == "__main__":
     #     print("Adapter enabled")
     # else:
     #     print("Adapter not enabled")
-    adapters = NetAdapter.get_netadapters()
+    adapters = WinNetAdapter.get_netadapters()
     print(adapters)
 
-    print(NetAdapter.get_adapter_status("Ethernet"))
+    print(WinNetAdapter.get_adapter_status("Ethernet"))
 
     with disable_all_adapters():
-        print([NetAdapter.get_adapter_status(adpter_name=adapter).casefold() for adapter in adapters])
-    print([NetAdapter.get_adapter_status(adpter_name=adapter).casefold() for adapter in adapters])
+        print([WinNetAdapter.get_adapter_status(adpter_name=adapter).casefold() for adapter in adapters])
+    print([WinNetAdapter.get_adapter_status(adpter_name=adapter).casefold() for adapter in adapters])
